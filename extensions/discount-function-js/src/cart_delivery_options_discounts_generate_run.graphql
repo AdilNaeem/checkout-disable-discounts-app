@@ -1,0 +1,15 @@
+query DeliveryInput {
+  cart {
+    deliveryGroups {
+      id
+    }
+  }
+  discount {
+    discountClasses
+  }
+  shop {
+    metafield(namespace: "$app:discount-settings", key: "enabled") {
+      value
+    }
+  }
+}

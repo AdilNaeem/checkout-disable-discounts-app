@@ -1,0 +1,11 @@
+query CartInput {
+  enteredDiscountCodes {
+    code
+    rejectable
+  }
+  shop {
+    metafield(namespace: "$app:discount-settings", key: "enabled") {
+      value
+    }
+  }
+}
