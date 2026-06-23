@@ -33,3 +33,5 @@ database.sqlite
 
 # Local dev tunnel
 .ngrok*
+.vercel
+.env*
