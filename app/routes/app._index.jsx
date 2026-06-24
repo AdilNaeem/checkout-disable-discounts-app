@@ -56,12 +56,43 @@ export const loader = async ({ request }) => {
   let discountGid = shop.discountGid?.value ?? null;
   let setupError = null;
 
+  // If we have a stored discount GID, verify it still exists and is linked to the
+  // current function. If it's stale (e.g. left over from a dev/ngrok session with
+  // a different function ID), clear it so we recreate below.
+  if (functionId && discountGid) {
+    const verifyRes = await admin.graphql(
+      `#graphql
+      query verifyDiscount($id: ID!) {
+        discountNode(id: $id) {
+          id
+          discount {
+            ... on DiscountAutomaticApp {
+              appDiscountType {
+                functionId
+              }
+            }
+          }
+        }
+      }`,
+      { variables: { id: discountGid } },
+    );
+    const verifyData = await verifyRes.json();
+    const linkedFunctionId =
+      verifyData.data?.discountNode?.discount?.appDiscountType?.functionId ?? null;
+    console.log("[discount-filter] stored discount function:", linkedFunctionId, "current:", functionId);
+
+    if (!linkedFunctionId || linkedFunctionId !== functionId) {
+      console.log("[discount-filter] stale discount detected — will recreate");
+      discountGid = null;
+    }
+  }
+
   if (!functionId) {
     setupError =
       fnQueryErrors ??
       "shopifyFunctions returned no results — run `shopify app deploy` then reload.";
   } else if (!discountGid) {
-    // First load: create the always-on automatic discount that triggers the function
+    // First load (or stale discount): create the always-on automatic discount
     const createRes = await admin.graphql(
       `#graphql
       mutation discountAutomaticAppCreate($automaticAppDiscount: DiscountAutomaticAppInput!) {
