@@ -23,7 +23,8 @@ export function cartLinesDiscountsGenerateRun(input) {
 
   const enteredCodes = input.enteredDiscountCodes ?? [];
 
-  const codesToReject = enteredCodes.filter(({ code }) => {
+  const codesToReject = enteredCodes.filter(({ code, rejectable }) => {
+    if (!rejectable) return false;
     const normalizedCode = code.toUpperCase().trim();
     const isAllowed = ALLOWED_DISCOUNT_CODES.some(
       c => normalizedCode.startsWith(c.toUpperCase().trim())

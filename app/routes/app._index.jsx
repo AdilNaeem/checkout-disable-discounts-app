@@ -43,7 +43,15 @@ export const loader = async ({ request }) => {
 
   // Capture any GraphQL-level errors from the functions query
   const fnQueryErrors = fnData.errors?.map((e) => e.message).join(", ") ?? null;
-  const functionId = fnData.data?.shopifyFunctions?.nodes?.[0]?.id ?? null;
+  const allFunctions = fnData.data?.shopifyFunctions?.nodes ?? [];
+  console.log("[discount-filter] shopifyFunctions:", JSON.stringify(allFunctions));
+  const functionId =
+    allFunctions.find((n) =>
+      n.apiType?.toLowerCase().includes("cart_lines_discounts") ||
+      n.apiType?.toLowerCase().includes("cart.lines.discounts")
+    )?.id ??
+    allFunctions[0]?.id ??
+    null;
 
   let discountGid = shop.discountGid?.value ?? null;
   let setupError = null;
