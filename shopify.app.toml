@@ -2,7 +2,7 @@
 
 client_id = "f8743a838f2b40c28e11e360e4fbbc82"
 name = "Checkout Disable Discounts App"
-application_url = "https://checkout-disable-discounts-lw29310nq.vercel.app"
+application_url = "https://checkout-disable-discounts-o90gx3ke7.vercel.app"
 embedded = true
 
 [access_scopes]
@@ -45,7 +45,7 @@ api_version = "2026-07"
   topics = [ "app/scopes_update" ]
 
 [auth]
-redirect_urls = [ "https://checkout-disable-discounts-lw29310nq.vercel.app/auth/callback" ]
+redirect_urls = [ "https://checkout-disable-discounts-o90gx3ke7.vercel.app/auth/callback" ]
 
 [build]
 automatically_update_urls_on_dev = true
